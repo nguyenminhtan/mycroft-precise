@@ -109,6 +109,7 @@ class TriggerDetector:
         # type: (float) -> bool
         """Returns whether the new prediction caused an activation"""
         chunk_activated = prob > 1 - self.sensitivity
+        print(prob, 1 - self.sensitivity, chunk_activated)
 
         if chunk_activated or self.activation < 0:
             self.activation += 1

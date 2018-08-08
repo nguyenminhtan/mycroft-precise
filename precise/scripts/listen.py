@@ -44,6 +44,8 @@ usage = '''
     
     :-p --save-prefix str -
         Prefix for saved filenames
+        
+    :-se --sensitivity float 0.2
 '''
 
 session_id, chunk_num = '%09d' % randint(0, 999999999), 0
@@ -68,7 +70,7 @@ def main():
             chunk_num += 1
 
     def on_prediction(conf):
-        print('!' if conf > 0.8 else '.', end='', flush=True)
+        print('!' if conf > 1 - args.sensitivity else '.', end='', flush=True)
 
     listener = Listener(args.model, args.chunk_size)
     audio_buffer = np.zeros(listener.pr.buffer_samples, dtype=float)
@@ -83,7 +85,7 @@ def main():
     engine = ListenerEngine(listener, args.chunk_size)
     engine.get_prediction = get_prediction
     runner = PreciseRunner(engine, args.threshold, on_activation=on_activation,
-                           on_prediction=on_prediction, sensitivity=0.8)
+                           on_prediction=on_prediction, sensitivity=args.sensitivity)
     runner.start()
     Event().wait()  # Wait forever
 
