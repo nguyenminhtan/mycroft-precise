@@ -16,6 +16,7 @@
 #import sys
 #sys.path.append('~/mic_hat/')
 import numpy as np
+import os
 from os.path import join
 from prettyparse import create_parser
 from random import randint
@@ -50,6 +51,10 @@ session_id, chunk_num = '%09d' % randint(0, 999999999), 0
 
 def main():
     args = create_parser(usage).parse_args()
+
+    if args.save_dir:
+        if not os.path.exists(args.save_dir):
+            os.makedirs(args.save_dir)
 
     def on_activation():      
         activate_notify()
